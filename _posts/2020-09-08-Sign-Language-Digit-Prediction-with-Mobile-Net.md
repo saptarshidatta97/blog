@@ -19,7 +19,7 @@ Having discussed the MobileNet model to some extent, let move ahead to other sec
 ## Data Preparation
 We have used the Sign Language Digits dataset from [GitHub](https://github.com/ardamavi/Sign-Language-Digits-Dataset). The data is located in corresponding folders ranging from 0-9, however we will use a script to divide the data into train, test and valid datasets.
 
-```python
+`
 os.chdir('/content/gdrive/My Drive/Sign-Language-Digits-Dataset/Dataset')
 if os.path.isdir('train/0/') is False: 
     os.mkdir('train')
@@ -40,7 +40,7 @@ if os.path.isdir('train/0/') is False:
             shutil.move(f'train/{i}/{k}', f'test/{i}')
 
 os.chdir('../..')
-```
+`
 
 So what we are basically doing in the above script is at first checking whether a train folder already exists, if not, we are creating a train/test/valid folders. Then, we will move all the images corresponding to a particular class-folder from the main folder to the corresponding class-folder inside the train folder, and at the same time creating new class-folder inside the valid and test folders. Then we randomly move 30 and 5 images from each class-folder inside train folder to the corresponding class-folders inside valid and test folders that were created before.
 We run the entire process in a loop iterating over class-folders ranging from 0-9.
