@@ -19,7 +19,7 @@ Having discussed the MobileNet model to some extent, let move ahead to other sec
 ## Data Preparation
 We have used the Sign Language Digits dataset from [GitHub](https://github.com/ardamavi/Sign-Language-Digits-Dataset). The data is located in corresponding folders ranging from 0-9, however we will use a script to divide the data into train, test and valid datasets.
 
-```
+```python
 os.chdir('/content/gdrive/My Drive/Sign-Language-Digits-Dataset/Dataset')
 if os.path.isdir('train/0/') is False: 
     os.mkdir('train')
