@@ -1,1 +1,1 @@
-Sitemap: https://git.saptarshidatta.in/sitemap.xml
+Sitemap: https://saptarshidatta97.github.io/blog/sitemap.xml
