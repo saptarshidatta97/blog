@@ -1,7 +1,7 @@
 ---
 published: true
 layout: post
-title: Sign-Language-Digit-Prediction-with-Mobile-Net
+title: Sign Language Digit Predictionwith MobileNet
 ---
 In the last [post](https://git.saptarshidatta.in/Transfer-Learning-with-VGG-16/), we applied Transfer Learning in the VGG-16 Model with the Cat vs Dogs data set. However the application was minimal as we only changed the last output layer from a 'softmax' actiavted outpur to a 'sigmoid' activated output. Additionally, the VGG-16 model was already trained on the ImageNet Data, which originally had imaged of cats and dogs. We jist trained the last dense layer which predicted whether the image is og a cat or a dog.
 
