@@ -16,26 +16,26 @@
 <h2 id="data-preparation">Data Preparation</h2>
 <p>We have used the Sign Language Digits dataset from <a href="https://github.com/ardamavi/Sign-Language-Digits-Dataset">GitHub</a>. The data is located in corresponding folders ranging from 0-9, however we will use a script to divide the data into train, test and valid datasets.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>os.chdir('/content/gdrive/My Drive/Sign-Language-Digits-Dataset/Dataset')
-if os.path.isdir('train/0/') is False: 
-    os.mkdir('train')
-    os.mkdir('valid')
-    os.mkdir('test')
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">'/content/gdrive/My Drive/Sign-Language-Digits-Dataset/Dataset'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">'train/0/'</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span> 
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">'train'</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">'valid'</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">'test'</span><span class="p">)</span>
 
-    for i in range(0, 10):
-        shutil.move(f'{i}', 'train')
-        os.mkdir(f'valid/{i}')
-        os.mkdir(f'test/{i}')
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">f</span><span class="s">'{i}'</span><span class="p">,</span> <span class="s">'train'</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">f</span><span class="s">'valid/{i}'</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">f</span><span class="s">'test/{i}'</span><span class="p">)</span>
 
-        valid_samples = random.sample(os.listdir(f'train/{i}'), 30)
-        for j in valid_samples:
-            shutil.move(f'train/{i}/{j}', f'valid/{i}')
+        <span class="n">valid_samples</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">f</span><span class="s">'train/{i}'</span><span class="p">),</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">valid_samples</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">f</span><span class="s">'train/{i}/{j}'</span><span class="p">,</span> <span class="n">f</span><span class="s">'valid/{i}'</span><span class="p">)</span>
 
-        test_samples = random.sample(os.listdir(f'train/{i}'), 5)
-        for k in test_samples:
-            shutil.move(f'train/{i}/{k}', f'test/{i}')
+        <span class="n">test_samples</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">f</span><span class="s">'train/{i}'</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">test_samples</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">f</span><span class="s">'train/{i}/{k}'</span><span class="p">,</span> <span class="n">f</span><span class="s">'test/{i}'</span><span class="p">)</span>
 
-os.chdir('../..')
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">'../..'</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>So what we are basically doing in the above script is at first checking whether a train folder already exists, if not, we are creating a train/test/valid folders. Then, we will move all the images corresponding to a particular class-folder from the main folder to the corresponding class-folder inside the train folder, and at the same time creating new class-folder inside the valid and test folders. Then we randomly move 30 and 5 images from each class-folder inside train folder to the corresponding class-folders inside valid and test folders that were created before.
