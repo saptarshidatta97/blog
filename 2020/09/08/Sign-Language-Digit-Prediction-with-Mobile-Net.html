@@ -15,6 +15,7 @@
 
 <h2 id="data-preparation">Data Preparation</h2>
 <p>We have used the Sign Language Digits dataset from <a href="https://github.com/ardamavi/Sign-Language-Digits-Dataset">GitHub</a>. The data is located in corresponding folders ranging from 0-9, however we will use a script to divide the data into train, test and valid datasets.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>os.chdir('/content/gdrive/My Drive/Sign-Language-Digits-Dataset/Dataset')
 if os.path.isdir('train/0/') is False: 
     os.mkdir('train')
@@ -36,10 +37,12 @@ if os.path.isdir('train/0/') is False:
 
 os.chdir('../..')
 </code></pre></div></div>
+
 <p>So what we are basically doing in the above script is at first checking whether a train folder already exists, if not, we are creating a train/test/valid folders. Then, we will move all the images corresponding to a particular class-folder from the main folder to the corresponding class-folder inside the train folder, and at the same time creating new class-folder inside the valid and test folders. Then we randomly move 30 and 5 images from each class-folder inside train folder to the corresponding class-folders inside valid and test folders that were created before.
 We run the entire process in a loop iterating over class-folders ranging from 0-9.</p>
 
 <p>Next, we preprocess the train, valid and test data in a fashion the MobileNet model expects(MobileNet expects images to be scales between [-1,1] rather than [0, 225]. We set the batch size to 10 and the target image size to (224, 224) since that is the image size that MobileNet expects. We set shuffle to False for the test batch, so that later we can plot our results on to a confusion Matrix.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>train_batches = ImageDataGenerator(preprocessing_function=tf.keras.applications.mobilenet.preprocess_input).flow_from_directory(
     directory=train_path, target_size=(224,224), batch_size=10)
 valid_batches = ImageDataGenerator(preprocessing_function=tf.keras.applications.mobilenet.preprocess_input).flow_from_directory(
@@ -52,6 +55,7 @@ test_batches = ImageDataGenerator(preprocessing_function=tf.keras.applications.m
 
 <p>We will import the MobileNet Model just as we imported the VGG-16 Model. Then we will drop the last 5 layers forom the model and add a dense layer with softmax activation predicting 10 classes ranging from 0-9. Later we freeze all the layers except the last 23 layers (A MobileNet Model has 88 Layers). The choice of the number 23 is based upon personal choice and some experimentation. It was found out that if we train the last 23 layers, we get some really good results.
 Please note that it is a significant deviation from the last VGG-16 Model training, where we only trained the last output layer.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mobile</span> <span class="p">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">applications</span><span class="p">.</span><span class="n">mobilenet</span><span class="p">.</span><span class="n">MobileNet</span><span class="p">()</span>
 <span class="n">x</span> <span class="p">=</span> <span class="n">mobile</span><span class="p">.</span><span class="n">layers</span><span class="p">[-</span><span class="m">6</span><span class="p">].</span><span class="n">output</span>
 <span class="n">predictions</span> <span class="p">=</span> <span class="n">Dense</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="n">activation</span><span class="p">=</span><span class="s1">'softmax'</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
@@ -59,11 +63,15 @@ Please note that it is a significant deviation from the last VGG-16 Model traini
 <span class="n">for</span> <span class="n">layer</span> <span class="k">in</span> <span class="k">model</span><span class="p">.</span><span class="n">layers</span><span class="p">[:-</span><span class="m">23</span><span class="p">]:</span>
     <span class="n">layer</span><span class="p">.</span><span class="n">trainable</span> <span class="p">=</span> <span class="nb">False</span>
 </code></pre></div></div>
+
 <p>Now, we will compile and train the model for 30 epochs and our model scores 100% valodation accuracy and 98.89% train accuracy. This shows taht our model is generalising well.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(x=train_batches, steps_per_epoch=18, validation_data=valid_batches, validation_steps=3, epochs=30, verbose=2)
 </code></pre></div></div>
+
 <p>Here are the accuracies for the last 5 epochs:</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Epoch 25/30
 18/18 - 1s - loss: 0.0449 - accuracy: 0.9944 - val_loss: 0.0444 - val_accuracy: 1.0000
 Epoch 26/30
@@ -82,6 +90,7 @@ Epoch 30/30
 <h2 id="prediction-on-the-test-batch">Prediction on the Test Batch</h2>
 
 <p>Now, let’s test the model on the test batch and plot the confusion matrix.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>predictions = model.predict(x=test_batches, steps=5, verbose=0)
 cm = confusion_matrix(y_true=test_labels, y_pred=predictions.argmax(axis=1))
 cm_plot_labels = ['0','1','2','3','4','5','6','7','8','9']
@@ -99,5 +108,6 @@ Confusion matrix, without normalization
  [0 0 0 0 0 0 0 0 5 0]
  [0 0 0 0 0 0 0 0 0 5]]
 </code></pre></div></div>
+
 <p>Our model has performed excellent on the Test batch with only one error.
 Please access the <a href="https://github.com/saptarshidatta96/Sign-Language-Digits-Prediction">GitHub</a> Repository to access the Python Notebook associated with this exercise.</p>
